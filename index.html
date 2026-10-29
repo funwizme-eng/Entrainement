@@ -1,28 +1,31 @@
-````html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#111827">
 <title>Mon Entraînement</title>
 <style>
+  :root { color-scheme: dark; box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { margin: 0; font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: #111827; color: #f9fafb; padding-bottom: 90px; }
-  header { padding: 14px 16px; background: #1f2937; position: sticky; top: 0; z-index: 5; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body { margin: 0; font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: #111827; color: #f9fafb; padding-bottom: 40px; }
+  header { padding: 14px 16px; background: #1f2937; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; }
   h1 { font-size: 18px; margin: 0 0 8px; }
   h3 { margin: 0 0 8px; }
-  select, button, input { font-size: 16px; border-radius: 10px; border: none; }
+  select, button, input, textarea { font-size: 16px; border-radius: 10px; border: none; font-family: inherit; }
   select { width: 100%; padding: 10px; background: #374151; color: #fff; }
   .timers { display: flex; gap: 8px; margin-top: 10px; }
   .timer { flex: 1; background: #111827; border-radius: 10px; padding: 8px; text-align: center; }
   .timer small { display: block; color: #9ca3af; font-size: 11px; }
   .timer b { font-size: 22px; font-variant-numeric: tabular-nums; }
+  .timer.fin b { color: #f59e0b; }
   .btn { padding: 10px 14px; background: #2563eb; color: #fff; font-weight: 600; }
   .btn.green { background: #16a34a; }
   .btn.red { background: #dc2626; }
   .btn.gray { background: #4b5563; }
+  .btn.sm { padding: 6px 10px; font-size: 13px; }
   .row { display: flex; gap: 8px; margin-top: 10px; }
   .row .btn { flex: 1; }
   .exo { background: #1f2937; margin: 12px; border-radius: 14px; padding: 12px; }
@@ -36,12 +39,14 @@
   .set.done input { background: #14532d; }
   .prev { font-size: 12px; color: #6b7280; margin: 0 0 8px; }
   .hist { margin: 12px; }
-  .hist div.item { background: #1f2937; border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 14px; }
+  .item { background: #1f2937; border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .item button { background: #4b5563; color: #fff; padding: 6px 10px; font-size: 14px; }
   .prog { background: #1f2937; margin: 12px; border-radius: 14px; padding: 12px; }
   .legend { display: flex; gap: 14px; font-size: 12px; color: #9ca3af; margin: 8px 0 4px; }
   .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
   .vide { color: #6b7280; font-size: 14px; padding: 16px 0; text-align: center; }
   svg { width: 100%; height: auto; display: block; }
+  textarea { width: 100%; height: 90px; background: #374151; color: #fff; padding: 8px; margin-top: 8px; font-size: 12px; }
 </style>
 </head>
 <body>
@@ -50,7 +55,7 @@
   <select id="seance"></select>
   <div class="timers">
     <div class="timer"><small>SÉANCE</small><b id="tSeance">00:00</b></div>
-    <div class="timer"><small>REPOS</small><b id="tRepos">00:00</b></div>
+    <div class="timer" id="boxRepos"><small>REPOS</small><b id="tRepos">00:00</b></div>
   </div>
   <div class="row">
     <button class="btn green" id="btnStart">▶ Démarrer</button>
@@ -65,13 +70,22 @@
   <h3>📈 Progression</h3>
   <select id="progExo"></select>
   <div class="legend">
-    <span><i style="background:#3b82f6"></i>Poids max (kg)</span>
-    <span><i style="background:#f59e0b"></i>Volume (kg × reps)</span>
+    <span><i style="background:#3b82f6"></i><span id="l1">Poids max (kg)</span></span>
+    <span><i style="background:#f59e0b"></i><span id="l2">Volume</span></span>
   </div>
   <div id="graph"></div>
 </div>
 
 <div class="hist" id="hist"></div>
+
+<div class="hist">
+  <h3>Données</h3>
+  <div class="row" style="margin-top:0">
+    <button class="btn gray" id="btnExport">Copier l’export</button>
+    <button class="btn gray" id="btnImport">Importer</button>
+  </div>
+  <textarea id="zone" placeholder="Colle ici un export pour l’importer, puis appuie sur Importer." style="display:none"></textarea>
+</div>
 
 <script>
 const PROGRAMME = {
@@ -100,7 +114,7 @@ const PROGRAMME = {
     ["Dips", 3, "8-12", 90],
     ["Landmine Press", 3, "8/bras", 60],
     ["Hammer Curls", 2, "10-12", 60],
-    ["Pallof Press", 3, "10/côté", 60]
+    ["Kettlebell Swings", 3, "12-15", 60]
   ],
   "Séance 4 – Lower (vendredi)": [
     ["Trap Bar Deadlift", 4, "4-5", 150],
@@ -110,121 +124,214 @@ const PROGRAMME = {
     ["Nordic Hamstring Curl (or Leg Curl)", 3, "6-8", 90],
     ["Seated Calf Raises", 3, "12-15", 60],
     ["Ab Wheel Rollout", 3, "8-12", 60]
+  ],
+  "Séance Full Body (HIIT)": [
+    ["Push-Ups (à l’échec)", 5, "échec", 10],
+    ["Shoulder Press", 5, "10-12", 10],
+    ["Barbell Row", 5, "10-12", 10],
+    ["Squat", 5, "10-12", 10],
+    ["Walking Lunges", 5, "10/jambe", 10],
+    ["Bicep Curl", 5, "10-12", 10],
+    ["Triceps Extension", 5, "10-12", 10],
+    ["Plank", 5, "30-45 s", 180]
   ]
 };
 
 const $ = id => document.getElementById(id);
-let startTime = null, reposEnd = null, reposDefault = 90, tick = null;
 const fmt = s => String(Math.floor(s/60)).padStart(2,'0') + ':' + String(Math.floor(s%60)).padStart(2,'0');
-const load = k => JSON.parse(localStorage.getItem(k) || 'null');
-const save = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+let mem = {};
+const load = k => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : (mem[k] || null); } catch (e) { return mem[k] || null; } };
+const save = (k, v) => { mem[k] = v; try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 
-// Menu des séances
+// Brouillon de séance en cours (sauvegardé en continu)
+let draft = load('encours') || { start: null, sel: null, data: {} };
+let reposEnd = null, reposDefault = 90, audioCtx = null, reposAlerte = false;
+const sauver = () => save('encours', draft);
+
 Object.keys(PROGRAMME).forEach(n => { const o = document.createElement('option'); o.textContent = n; $('seance').appendChild(o); });
-$('seance').onchange = render;
+if (draft.sel && PROGRAMME[draft.sel]) $('seance').value = draft.sel;
+$('seance').onchange = () => { collecter(); draft.sel = $('seance').value; sauver(); render(); };
 
-// Menu des exercices pour le graphique (sans doublons)
 const tousExos = [...new Set(Object.values(PROGRAMME).flat().map(e => e[0]))];
 tousExos.forEach(n => { const o = document.createElement('option'); o.textContent = n; $('progExo').appendChild(o); });
 $('progExo').onchange = graphique;
 
-function lastWeights(nom) {
+function derniere(nom) {
   const h = load('historique') || [];
   for (let i = h.length - 1; i >= 0; i--) {
     const e = h[i].exos.find(x => x.nom === nom);
-    if (e && e.sets.some(s => s.kg)) return e.sets.filter(s => s.kg).map(s => s.kg + 'kg×' + s.reps).join(' · ');
+    if (e) {
+      const s = e.sets.filter(x => x.kg || x.reps);
+      if (s.length) return s;
+    }
   }
   return null;
 }
 
+// Lit l'écran et le range dans le brouillon
+function collecter() {
+  const nom = $('seance').value;
+  const d = {};
+  document.querySelectorAll('.set').forEach(r => {
+    const [kg, reps] = r.querySelectorAll('input');
+    (d[r.dataset.exo] = d[r.dataset.exo] || []).push([kg.value, reps.value, r.classList.contains('done')]);
+  });
+  if (Object.keys(d).length) draft.data[nom] = d;
+}
+const maj = () => { collecter(); sauver(); };
+
 function render() {
   const nom = $('seance').value;
+  draft.sel = nom;
   const liste = $('liste');
   liste.innerHTML = '';
+  const saved = draft.data[nom] || {};
   PROGRAMME[nom].forEach(([exo, series, reps, repos]) => {
     const d = document.createElement('div');
     d.className = 'exo';
-    const prev = lastWeights(exo);
-    d.innerHTML = `<h3>${exo}</h3><p>${series} séries · ${reps} reps · repos ${repos}s</p>` + (prev ? `<div class="prev">Dernière fois : ${prev}</div>` : '');
+    const prev = derniere(exo);
+    const txt = prev ? prev.map(s => (s.kg ? s.kg + 'kg×' : '') + (s.reps || '?')).join(' · ') : '';
+    d.innerHTML = `<h3>${exo}</h3><p>${series} séries · ${reps} reps · repos ${repos}s</p>` + (prev ? `<div class="prev">Dernière fois : ${txt}</div>` : '');
     for (let s = 0; s < series; s++) {
       const r = document.createElement('div');
       r.className = 'set';
       r.dataset.exo = exo;
-      r.dataset.repos = repos;
-      r.innerHTML = `<span>${s+1}</span><input type="number" inputmode="decimal" placeholder="kg"><input type="number" inputmode="numeric" placeholder="reps"><button>✓</button>`;
+      const p = prev && (prev[s] || prev[prev.length - 1]);
+      r.innerHTML = `<span>${s+1}</span><input type="number" inputmode="decimal" placeholder="${p && p.kg ? p.kg : 'kg'}"><input type="number" inputmode="numeric" placeholder="${p && p.reps ? p.reps : 'reps'}"><button>✓</button>`;
+      const [kg, rp] = r.querySelectorAll('input');
+      const v = saved[exo] && saved[exo][s];
+      if (v) { kg.value = v[0]; rp.value = v[1]; if (v[2]) r.classList.add('done'); }
+      kg.oninput = rp.oninput = maj;
       r.querySelector('button').onclick = () => {
         r.classList.toggle('done');
-        if (r.classList.contains('done')) { if (!startTime) demarrer(); lancerRepos(repos); }
+        if (r.classList.contains('done')) { if (!draft.start) demarrer(); lancerRepos(repos); }
+        maj();
       };
       d.appendChild(r);
     }
     liste.appendChild(d);
   });
+  sauver();
 }
 
-function demarrer() {
-  if (startTime) return;
-  startTime = Date.now();
-  $('btnStart').textContent = '⏸ En cours';
-  tick = setInterval(update, 500);
-}
+function majBouton() { $('btnStart').textContent = draft.start ? '● En cours' : '▶ Démarrer'; }
+function demarrer() { if (draft.start) return; draft.start = Date.now(); sauver(); majBouton(); }
 
 function lancerRepos(sec) {
   reposDefault = sec || reposDefault;
   reposEnd = Date.now() + reposDefault * 1000;
+  reposAlerte = reposDefault <= 10;
+  try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); } catch (e) {}
+  $('boxRepos').classList.remove('fin');
+}
+
+function bip(seq) {
+  try {
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    seq.forEach(([t, dur]) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.frequency.value = 880; o.connect(g); g.connect(audioCtx.destination);
+      g.gain.setValueAtTime(0.25, now + t);
+      g.gain.setValueAtTime(0.25, now + t + dur - 0.03);
+      g.gain.linearRampToValueAtTime(0.001, now + t + dur);
+      o.start(now + t); o.stop(now + t + dur);
+    });
+  } catch (e) {}
 }
 
 function update() {
-  if (startTime) $('tSeance').textContent = fmt((Date.now() - startTime) / 1000);
+  if (draft.start) $('tSeance').textContent = fmt((Date.now() - draft.start) / 1000);
   if (reposEnd) {
     const left = Math.ceil((reposEnd - Date.now()) / 1000);
     if (left <= 0) {
       $('tRepos').textContent = '00:00';
+      $('boxRepos').classList.add('fin');
       reposEnd = null;
+      bip([[0, 1.0]]);
       if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
-    } else $('tRepos').textContent = fmt(left);
+    } else {
+      $('tRepos').textContent = fmt(left);
+      if (!reposAlerte && left <= 10) { reposAlerte = true; bip([[0, 0.15], [0.3, 0.15]]); }
+    }
   }
 }
+setInterval(update, 500);
 
 $('btnStart').onclick = demarrer;
 $('btnRepos').onclick = () => lancerRepos(reposDefault);
 
 $('btnFin').onclick = () => {
-  if (!startTime) return alert('Séance non démarrée.');
+  collecter();
+  const nom = $('seance').value;
+  const d = draft.data[nom] || {};
+  const exos = Object.keys(d).map(n => ({
+    nom: n,
+    sets: d[n].filter(s => s[0] || s[1]).map(s => ({ kg: s[0], reps: s[1], fait: s[2] }))
+  })).filter(e => e.sets.length);
+  if (!exos.length) return alert('Aucune série saisie.');
   if (!confirm('Terminer et enregistrer la séance ?')) return;
-  const exos = {};
-  document.querySelectorAll('.set').forEach(r => {
-    const [kg, reps] = r.querySelectorAll('input');
-    const nom = r.dataset.exo;
-    exos[nom] = exos[nom] || { nom, sets: [] };
-    if (kg.value || reps.value) exos[nom].sets.push({ kg: kg.value, reps: reps.value, fait: r.classList.contains('done') });
-  });
   const h = load('historique') || [];
-  h.push({ ts: Date.now(), date: new Date().toLocaleDateString('fr-FR'), seance: $('seance').value, duree: fmt((Date.now() - startTime) / 1000), exos: Object.values(exos) });
+  h.push({ ts: Date.now(), date: new Date().toLocaleDateString('fr-FR'), seance: nom, duree: fmt(draft.start ? (Date.now() - draft.start) / 1000 : 0), exos });
   save('historique', h);
-  clearInterval(tick); startTime = null; reposEnd = null;
+  delete draft.data[nom];
+  draft.start = null; reposEnd = null;
+  sauver(); majBouton();
   $('tSeance').textContent = '00:00'; $('tRepos').textContent = '00:00';
-  $('btnStart').textContent = '▶ Démarrer';
   render(); histo(); graphique();
 };
 
 function histo() {
-  const h = (load('historique') || []).slice(-10).reverse();
-  $('hist').innerHTML = h.length ? '<h3>Historique</h3>' + h.map(s => `<div class="item"><b>${s.date}</b> – ${s.seance}<br>Durée : ${s.duree}</div>`).join('') : '';
+  const h = load('historique') || [];
+  const last = h.slice(-10).reverse();
+  $('hist').innerHTML = last.length ? '<h3>Historique</h3>' : '';
+  last.forEach(s => {
+    const d = document.createElement('div');
+    d.className = 'item';
+    d.innerHTML = `<div><b>${s.date}</b> – ${s.seance}<br>Durée : ${s.duree}</div><button>🗑</button>`;
+    d.querySelector('button').onclick = () => {
+      if (!confirm('Supprimer cette séance de l’historique ?')) return;
+      save('historique', (load('historique') || []).filter(x => x.ts !== s.ts));
+      render(); histo(); graphique();
+    };
+    $('hist').appendChild(d);
+  });
 }
 
+// Export / import
+$('btnExport').onclick = async () => {
+  const txt = JSON.stringify(load('historique') || []);
+  try { await navigator.clipboard.writeText(txt); alert('Export copié dans le presse-papiers.'); }
+  catch (e) { $('zone').style.display = 'block'; $('zone').value = txt; $('zone').select(); }
+};
+$('btnImport').onclick = () => {
+  const z = $('zone');
+  if (z.style.display === 'none') { z.style.display = 'block'; z.value = ''; z.focus(); return; }
+  try {
+    const arr = JSON.parse(z.value);
+    if (!Array.isArray(arr)) throw 0;
+    if (!confirm('Remplacer l’historique actuel par ces ' + arr.length + ' séances ?')) return;
+    save('historique', arr);
+    z.style.display = 'none'; z.value = '';
+    render(); histo(); graphique();
+  } catch (e) { alert('Données invalides.'); }
+};
+
 // ---------- Graphique de progression ----------
+// Si des charges sont saisies : poids max + volume (kg×reps). Sinon (poids du corps) : reps max + total reps.
 function donneesExo(nom) {
-  const h = load('historique') || [];
   const pts = [];
-  h.forEach(s => {
+  (load('historique') || []).forEach(s => {
     const e = s.exos.find(x => x.nom === nom);
     if (!e) return;
-    const sets = e.sets.filter(x => parseFloat(x.kg) > 0 && parseFloat(x.reps) > 0);
-    if (!sets.length) return;
-    const max = Math.max(...sets.map(x => parseFloat(x.kg)));
-    const vol = sets.reduce((t, x) => t + parseFloat(x.kg) * parseFloat(x.reps), 0);
-    pts.push({ date: s.date.slice(0, 5), max, vol });
+    const ok = e.sets.filter(x => parseFloat(x.reps) > 0);
+    if (!ok.length) return;
+    const lest = ok.filter(x => parseFloat(x.kg) > 0);
+    const corps = !lest.length;
+    const base = corps ? ok : lest;
+    const max = Math.max(...base.map(x => corps ? parseFloat(x.reps) : parseFloat(x.kg)));
+    const vol = base.reduce((t, x) => t + (corps ? 1 : parseFloat(x.kg)) * parseFloat(x.reps), 0);
+    pts.push({ date: s.date.slice(0, 5), max, vol, corps });
   });
   return pts;
 }
@@ -235,16 +342,21 @@ function ligne(pts, cle, couleur, W, H, pad) {
   const span = (max - min) || 1;
   const x = i => pad.l + (pts.length === 1 ? (W - pad.l - pad.r) / 2 : i * (W - pad.l - pad.r) / (pts.length - 1));
   const y = v => pad.t + (H - pad.t - pad.b) * (1 - (v - min) / span);
-  let d = pts.map((p, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p[cle]).toFixed(1)).join(' ');
+  const d = pts.map((p, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p[cle]).toFixed(1)).join(' ');
   let s = `<path d="${d}" fill="none" stroke="${couleur}" stroke-width="2.5" stroke-linejoin="round"/>`;
   pts.forEach((p, i) => { s += `<circle cx="${x(i).toFixed(1)}" cy="${y(p[cle]).toFixed(1)}" r="4" fill="${couleur}"/>`; });
-  return { svg: s, min, max, x, y };
+  return { svg: s, min, max, x };
 }
 
 function graphique() {
   const nom = $('progExo').value;
-  const pts = donneesExo(nom).slice(-12);
-  if (!pts.length) { $('graph').innerHTML = '<div class="vide">Pas encore de données pour cet exercice.<br>Termine une séance avec des poids pour voir la courbe.</div>'; return; }
+  let pts = donneesExo(nom);
+  if (pts.length) { const mode = pts[pts.length - 1].corps; pts = pts.filter(p => p.corps === mode); }
+  pts = pts.slice(-12);
+  if (!pts.length) { $('graph').innerHTML = '<div class="vide">Pas encore de données pour cet exercice.<br>Termine une séance avec des reps saisies pour voir la courbe.</div>'; return; }
+  const corps = pts[0].corps;
+  $('l1').textContent = corps ? 'Reps max' : 'Poids max (kg)';
+  $('l2').textContent = corps ? 'Total reps' : 'Volume (kg × reps)';
   const W = 340, H = 200, pad = { l: 38, r: 38, t: 14, b: 26 };
   const a = ligne(pts, 'max', '#3b82f6', W, H, pad);
   const b = ligne(pts, 'vol', '#f59e0b', W, H, pad);
@@ -261,17 +373,15 @@ function graphique() {
   const pas = Math.ceil(pts.length / 6);
   pts.forEach((p, i) => { if (i % pas === 0 || i === pts.length - 1) svg += `<text x="${a.x(i).toFixed(1)}" y="${H - 8}" fill="#9ca3af" font-size="10" text-anchor="middle">${p.date}</text>`; });
   svg += '</svg>';
-  const dernier = pts[pts.length - 1], premier = pts[0];
   let resume = '';
   if (pts.length > 1) {
-    const diff = dernier.max - premier.max;
-    resume = `<div class="prev" style="margin-top:8px">Poids max : ${premier.max} → ${dernier.max} kg (${diff >= 0 ? '+' : ''}${diff} kg) sur ${pts.length} séances</div>`;
+    const diff = pts[pts.length - 1].max - pts[0].max;
+    resume = `<div class="prev" style="margin-top:8px">${corps ? 'Reps max' : 'Poids max'} : ${pts[0].max} → ${pts[pts.length - 1].max} ${corps ? '' : 'kg '}(${diff >= 0 ? '+' : ''}${diff}) sur ${pts.length} séances</div>`;
   }
   $('graph').innerHTML = svg + resume;
 }
 
-render(); histo(); graphique();
+majBouton(); update(); render(); histo(); graphique();
 </script>
 </body>
 </html>
-````
