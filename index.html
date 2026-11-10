@@ -2,391 +2,324 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#111827">
-<title>Mon Entraînement</title>
+<title>Mon Entraînement – Hypertrophie</title>
 <style>
-  :root { color-scheme: dark; box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
-  body { margin: 0; font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: #111827; color: #f9fafb; padding-bottom: 40px; }
-  header { padding: 14px 16px; background: #1f2937; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; }
-  h1 { font-size: 18px; margin: 0 0 8px; }
-  h3 { margin: 0 0 8px; }
-  select, button, input, textarea { font-size: 16px; border-radius: 10px; border: none; font-family: inherit; }
-  select { width: 100%; padding: 10px; background: #374151; color: #fff; }
-  .timers { display: flex; gap: 8px; margin-top: 10px; }
-  .timer { flex: 1; background: #111827; border-radius: 10px; padding: 8px; text-align: center; }
-  .timer small { display: block; color: #9ca3af; font-size: 11px; }
-  .timer b { font-size: 22px; font-variant-numeric: tabular-nums; }
-  .timer.fin b { color: #f59e0b; }
-  .btn { padding: 10px 14px; background: #2563eb; color: #fff; font-weight: 600; }
-  .btn.green { background: #16a34a; }
-  .btn.red { background: #dc2626; }
-  .btn.gray { background: #4b5563; }
-  .btn.sm { padding: 6px 10px; font-size: 13px; }
-  .row { display: flex; gap: 8px; margin-top: 10px; }
-  .row .btn { flex: 1; }
-  .exo { background: #1f2937; margin: 12px; border-radius: 14px; padding: 12px; }
-  .exo h3 { margin: 0; font-size: 17px; }
-  .exo p { margin: 2px 0 10px; color: #9ca3af; font-size: 13px; }
-  .set { display: grid; grid-template-columns: 28px 1fr 1fr 44px; gap: 6px; align-items: center; margin-bottom: 6px; }
-  .set span { color: #9ca3af; text-align: center; }
-  .set input { width: 100%; padding: 10px; background: #374151; color: #fff; text-align: center; }
-  .set button { height: 42px; background: #374151; color: #9ca3af; font-size: 20px; }
-  .set.done button { background: #16a34a; color: #fff; }
-  .set.done input { background: #14532d; }
-  .prev { font-size: 12px; color: #6b7280; margin: 0 0 8px; }
-  .hist { margin: 12px; }
-  .item { background: #1f2937; border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .item button { background: #4b5563; color: #fff; padding: 6px 10px; font-size: 14px; }
-  .prog { background: #1f2937; margin: 12px; border-radius: 14px; padding: 12px; }
-  .legend { display: flex; gap: 14px; font-size: 12px; color: #9ca3af; margin: 8px 0 4px; }
-  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
-  .vide { color: #6b7280; font-size: 14px; padding: 16px 0; text-align: center; }
-  svg { width: 100%; height: auto; display: block; }
-  textarea { width: 100%; height: 90px; background: #374151; color: #fff; padding: 8px; margin-top: 8px; font-size: 12px; }
+*{box-sizing:border-box}
+body{margin:0;background:#111827;color:#f9fafb;font-family:Arial,sans-serif;padding-bottom:35px}
+header{position:sticky;top:0;background:#1f2937;padding:14px;z-index:5}
+h1{font-size:19px;margin:0 0 10px}
+h3{margin:0 0 8px}
+select,button,input,textarea{font:inherit;border:0;border-radius:9px;padding:10px}
+select{width:100%;background:#374151;color:white}
+.row,.timers{display:flex;gap:8px;margin-top:10px}
+.row button{flex:1}
+.btn{background:#2563eb;color:white;font-weight:bold}
+.green{background:#16a34a}.red{background:#dc2626}.gray{background:#4b5563}
+.timer{flex:1;background:#111827;border-radius:9px;padding:8px;text-align:center}
+.timer small{display:block;color:#9ca3af;font-size:11px}
+.timer b{font-size:22px;font-variant-numeric:tabular-nums}
+.fin b{color:#f59e0b}
+.exo,.prog{background:#1f2937;margin:12px;padding:12px;border-radius:13px}
+.exo h3{font-size:17px;margin:0}
+.exo p,.prev{color:#9ca3af;font-size:12px;margin:5px 0 10px}
+.superset{display:inline-block;background:#312e81;color:#c4b5fd;padding:4px 8px;border-radius:6px;font-size:11px;margin-bottom:7px;font-weight:bold}
+.set{display:grid;grid-template-columns:25px 1fr 1fr 42px;gap:6px;align-items:center;margin-bottom:6px}
+.set span{text-align:center;color:#9ca3af}
+.set input{width:100%;min-width:0;background:#374151;color:white;text-align:center}
+.set button{height:40px;background:#374151;color:white;font-size:19px}
+.set.done button{background:#16a34a}
+.set.done input{background:#14532d}
+.legend{display:flex;gap:12px;font-size:11px;color:#9ca3af;margin:10px 0}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+svg{width:100%;height:auto}
+.hist{margin:12px}
+.item{background:#1f2937;padding:10px;border-radius:9px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;font-size:13px;gap:8px}
+.item button{background:#4b5563;color:white}
+.vide{text-align:center;color:#9ca3af;padding:20px;font-size:13px}
+textarea{width:100%;height:100px;background:#374151;color:white;margin-top:8px}
 </style>
 </head>
 <body>
+
 <header>
-  <h1>🏋️ Mon Entraînement</h1>
-  <select id="seance"></select>
-  <div class="timers">
-    <div class="timer"><small>SÉANCE</small><b id="tSeance">00:00</b></div>
-    <div class="timer" id="boxRepos"><small>REPOS</small><b id="tRepos">00:00</b></div>
-  </div>
-  <div class="row">
-    <button class="btn green" id="btnStart">▶ Démarrer</button>
-    <button class="btn gray" id="btnRepos">⏱ Repos</button>
-    <button class="btn red" id="btnFin">■ Terminer</button>
-  </div>
+<h1>🏋️ Mon Entraînement – Hypertrophie</h1>
+<select id="seance"></select>
+<div class="timers">
+<div class="timer"><small>SÉANCE</small><b id="tSeance">00:00</b></div>
+<div class="timer" id="boxRepos"><small>REPOS</small><b id="tRepos">00:00</b></div>
+</div>
+<div class="row">
+<button class="btn green" id="btnStart">▶ Démarrer</button>
+<button class="btn gray" id="btnRepos">⏱ Repos</button>
+<button class="btn red" id="btnFin">■ Terminer</button>
+</div>
 </header>
 
 <div id="liste"></div>
 
 <div class="prog">
-  <h3>📈 Progression</h3>
-  <select id="progExo"></select>
-  <div class="legend">
-    <span><i style="background:#3b82f6"></i><span id="l1">Poids max (kg)</span></span>
-    <span><i style="background:#f59e0b"></i><span id="l2">Volume</span></span>
-  </div>
-  <div id="graph"></div>
+<h3>📈 Progression</h3>
+<select id="progExo"></select>
+<div class="legend">
+<span><i style="background:#3b82f6"></i><span id="l1">Poids max</span></span>
+<span><i style="background:#f59e0b"></i><span id="l2">Volume</span></span>
+</div>
+<div id="graph"></div>
 </div>
 
 <div class="hist" id="hist"></div>
-
 <div class="hist">
-  <h3>Données</h3>
-  <div class="row" style="margin-top:0">
-    <button class="btn gray" id="btnExport">Copier l’export</button>
-    <button class="btn gray" id="btnImport">Importer</button>
-  </div>
-  <textarea id="zone" placeholder="Colle ici un export pour l’importer, puis appuie sur Importer." style="display:none"></textarea>
+<h3>💾 Données</h3>
+<div class="row">
+<button class="btn gray" id="btnExport">Copier l'export</button>
+<button class="btn gray" id="btnImport">Importer</button>
+</div>
+<textarea id="zone" style="display:none" placeholder="Colle ici ton export JSON"></textarea>
 </div>
 
 <script>
-const PROGRAMME = {
-  "Séance 1 – Upper (lundi)": [
-    ["Bench Press", 4, "5-6", 120],
-    ["Pull-Ups", 4, "6-8", 120],
-    ["Standing Overhead Press", 3, "6-8", 120],
-    ["Chest-Supported Row", 3, "8-10", 90],
-    ["Push-Ups (explosive)", 3, "10-15", 60],
-    ["Low-to-High Cable Fly", 3, "10-12", 60],
-    ["Lateral Raises", 3, "12-15", 60],
-    ["Face Pulls", 3, "12-15", 60],
-    ["Lateral Raises", 3, "12-15", 60],
-    ["Hanging Leg Raises", 3, "10-15", 60]
-  ],
-  "Séance 2 – Lower (mardi)": [
-    ["Back Squat", 4, "5-6", 150],
-    ["Romanian Deadlift", 4, "6-8", 120],
-    ["Bulgarian Split Squat", 3, "8/jambe", 90],
-    ["Box Jumps", 3, "5", 90],
-    ["Hip Thrust", 3, "8-10", 90],
-    ["Standing Calf Raises", 3, "12-15", 60],
-    ["Plank", 3, "30-60 s", 60]
-  ],
-  "Séance 3 – Upper (jeudi)": [
-    ["Incline Dumbbell Press", 4, "6-8", 120],
-    ["Lat Pulldown (or Chin-Ups)", 4, "8-10", 90],
-    ["Single-Arm Dumbbell Row", 3, "8-10/bras", 90],
-    ["Dips", 3, "8-12", 90],
-    ["Landmine Press", 3, "8/bras", 60],
-    ["Lateral Raises", 3, "12-15", 60],
-    ["Lateral Raises", 3, "12-15", 60],
-    ["Hammer Curls", 2, "10-12", 60],
-    ["Kettlebell Swings", 3, "12-15", 60]
-  ],
-  "Séance 4 – Lower (vendredi)": [
-    ["Trap Bar Deadlift", 4, "4-5", 150],
-    ["Front Squat", 3, "6-8", 120],
-    ["Walking Lunges", 3, "10/jambe", 90],
-    ["Kettlebell Swings", 4, "12-15", 60],
-    ["Nordic Hamstring Curl (or Leg Curl)", 3, "6-8", 90],
-    ["Seated Calf Raises", 3, "12-15", 60],
-    ["Ab Wheel Rollout", 3, "8-12", 60]
-  ],
-  "Séance Full Body (HIIT)": [
-    ["Push-Ups (à l’échec)", 5, "échec", 10],
-    ["Shoulder Press", 5, "10-12", 10],
-    ["Barbell Row", 5, "10-12", 10],
-    ["Squat", 5, "10-12", 10],
-    ["Walking Lunges", 5, "10/jambe", 10],
-    ["Bicep Curl", 5, "10-12", 10],
-    ["Triceps Extension", 5, "10-12", 10],
-    ["Plank", 5, "30-45 s", 180]
-  ]
+const PROGRAMME={
+"Upper A – Lundi":[
+["Bench Press",3,"6-8",150],
+["Pull-Ups",3,"6-10",120],
+["Standing Overhead Press",2,"8-10",120],
+["Chest-Supported Row",3,"8-12",90],
+["Cable Fly",2,"10-15",60,"A1"],
+["Lateral Raises",3,"12-20",60,"A2"],
+["Cable Biceps Curl",3,"10-15",60,"B1"],
+["Face Pulls",2,"15-20",60,"B2"],
+["Triceps Pushdown",2,"10-15",60]
+],
+"Lower A – Mardi":[
+["Back Squat",3,"6-8",150],
+["Romanian Deadlift",3,"6-10",120],
+["Leg Press",2,"10-15",75,"A1"],
+["Seated Leg Curl",3,"10-15",75,"A2"],
+["Standing Calf Raises",4,"10-15",60,"B1"],
+["Hanging Leg Raises",2,"10-15",60,"B2"]
+],
+"Upper B – Jeudi":[
+["Incline Dumbbell Press",3,"6-10",120],
+["Lat Pulldown",3,"8-12",90],
+["Machine Chest Press",2,"8-12",90],
+["Seated Cable Row",3,"8-12",90],
+["Lateral Raises",3,"12-20",60,"A1"],
+["Reverse Pec Deck",2,"12-20",60,"A2"],
+["Hammer Curls",3,"10-12",60,"B1"],
+["Overhead Triceps Extension",3,"10-15",60,"B2"]
+],
+"Lower B – Vendredi":[
+["Trap Bar Deadlift",2,"5-8",150],
+["Front Squat",3,"8-10",120],
+["Bulgarian Split Squat",2,"8-12/jambe",90],
+["Hip Thrust",3,"8-12",75,"A1"],
+["Seated Leg Curl",3,"10-15",75,"A2"],
+["Seated Calf Raises",4,"12-15",60,"B1"],
+["Ab Wheel Rollout",2,"8-12",60,"B2"]
+],
+"Séance Full Body (HIIT)":[
+["Push-Ups (à l’échec)",5,"échec",10],
+["Shoulder Press",5,"10-12",10],
+["Barbell Row",5,"10-12",10],
+["Squat",5,"10-12",10],
+["Walking Lunges",5,"10/jambe",10],
+["Bicep Curl",5,"10-12",10],
+["Triceps Extension",5,"10-12",10],
+["Plank",5,"30-45 s",180]
+]};
+
+const $=id=>document.getElementById(id);
+const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(Math.floor(s%60)).padStart(2,"0");
+let mem={};
+const load=k=>{try{return JSON.parse(localStorage.getItem(k))||mem[k]||null}catch(e){return mem[k]||null}};
+const save=(k,v)=>{mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let draft=load("encours")||{start:null,sel:null,data:{}};
+let reposEnd=null,reposDefault=90,audioCtx=null,reposAlerte=false;
+
+Object.keys(PROGRAMME).forEach(n=>{
+let o=document.createElement("option");o.textContent=n;$("seance").appendChild(o);
+});
+if(draft.sel&&PROGRAMME[draft.sel])$("seance").value=draft.sel;
+$("seance").onchange=()=>{collecter();draft.sel=$("seance").value;render();};
+
+const tousExos=[...new Set(Object.values(PROGRAMME).flat().map(e=>e[0]))];
+tousExos.forEach(n=>{let o=document.createElement("option");o.textContent=n;$("progExo").appendChild(o)});
+$("progExo").onchange=graphique;
+
+function derniere(nom){
+let h=load("historique")||[];
+for(let i=h.length-1;i>=0;i--){
+let e=h[i].exos.find(x=>x.nom===nom);
+if(e){let s=e.sets.filter(x=>x.kg||x.reps);if(s.length)return s}
+}
+return null;
+}
+
+function collecter(){
+let nom=$("seance").value,d={};
+document.querySelectorAll(".set").forEach(r=>{
+let [kg,reps]=r.querySelectorAll("input");
+(d[r.dataset.exo]=d[r.dataset.exo]||[]).push([kg.value,reps.value,r.classList.contains("done")]);
+});
+if(Object.keys(d).length)draft.data[nom]=d;
+}
+function maj(){collecter();save("encours",draft)}
+
+function render(){
+let nom=$("seance").value;
+draft.sel=nom;
+let liste=$("liste");liste.innerHTML="";
+let saved=draft.data[nom]||{};
+PROGRAMME[nom].forEach(([exo,series,reps,repos,groupe])=>{
+let d=document.createElement("div");d.className="exo";
+let prev=derniere(exo);
+let txt=prev?prev.map(s=>(s.kg?s.kg+"kg×":"")+(s.reps||"?")).join(" · "):"";
+d.innerHTML=(groupe?`<div class="superset">SUPERSET ${groupe}</div>`:"")+`<h3>${exo}</h3><p>${series} séries · ${reps} reps · repos ${repos}s</p>`+(prev?`<div class="prev">Dernière fois : ${txt}</div>`:"");
+for(let s=0;s<series;s++){
+let r=document.createElement("div");r.className="set";r.dataset.exo=exo;
+let p=prev&&(prev[s]||prev[prev.length-1]);
+r.innerHTML=`<span>${s+1}</span><input type="number" inputmode="decimal" placeholder="${p&&p.kg?p.kg:"kg"}"><input type="number" inputmode="numeric" placeholder="${p&&p.reps?p.reps:"reps"}"><button>✓</button>`;
+let [kg,rp]=r.querySelectorAll("input"),v=saved[exo]&&saved[exo][s];
+if(v){kg.value=v[0];rp.value=v[1];if(v[2])r.classList.add("done")}
+kg.oninput=rp.oninput=maj;
+r.querySelector("button").onclick=()=>{
+r.classList.toggle("done");
+if(r.classList.contains("done")){if(!draft.start)demarrer();lancerRepos(repos)}
+maj();
+};
+d.appendChild(r);
+}
+liste.appendChild(d);
+});
+save("encours",draft);
+}
+
+function majBouton(){$("btnStart").textContent=draft.start?"● En cours":"▶ Démarrer"}
+function demarrer(){if(draft.start)return;draft.start=Date.now();save("encours",draft);majBouton()}
+function lancerRepos(sec){
+reposDefault=sec||reposDefault;reposEnd=Date.now()+reposDefault*1000;reposAlerte=reposDefault<=10;
+try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==="suspended")audioCtx.resume()}catch(e){}
+$("boxRepos").classList.remove("fin");
+}
+function bip(seq){
+try{if(!audioCtx)return;let now=audioCtx.currentTime;seq.forEach(([t,dur])=>{
+let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=880;o.connect(g);g.connect(audioCtx.destination);
+g.gain.setValueAtTime(.25,now+t);g.gain.setValueAtTime(.25,now+t+dur-.03);g.gain.linearRampToValueAtTime(.001,now+t+dur);o.start(now+t);o.stop(now+t+dur);
+})}catch(e){}
+}
+function update(){
+if(draft.start)$("tSeance").textContent=fmt((Date.now()-draft.start)/1000);
+if(reposEnd){
+let left=Math.ceil((reposEnd-Date.now())/1000);
+if(left<=0){$("tRepos").textContent="00:00";$("boxRepos").classList.add("fin");reposEnd=null;bip([[0,1]]);if(navigator.vibrate)navigator.vibrate([300,150,300])}
+else{$("tRepos").textContent=fmt(left);if(!reposAlerte&&left<=10){reposAlerte=true;bip([[0,.15],[.3,.15]])}}
+}
+}
+setInterval(update,500);
+$("btnStart").onclick=demarrer;
+$("btnRepos").onclick=()=>lancerRepos(reposDefault);
+
+$("btnFin").onclick=()=>{
+collecter();
+let nom=$("seance").value,d=draft.data[nom]||{};
+let exos=Object.keys(d).map(n=>({nom:n,sets:d[n].filter(s=>s[0]||s[1]).map(s=>({kg:s[0],reps:s[1],fait:s[2]}))})).filter(e=>e.sets.length);
+if(!exos.length)return alert("Aucune série saisie.");
+if(!confirm("Terminer et enregistrer la séance ?"))return;
+let h=load("historique")||[];
+h.push({ts:Date.now(),date:new Date().toLocaleDateString("fr-FR"),seance:nom,duree:fmt(draft.start?(Date.now()-draft.start)/1000:0),exos});
+save("historique",h);delete draft.data[nom];draft.start=null;reposEnd=null;
+save("encours",draft);majBouton();
+$("tSeance").textContent="00:00";$("tRepos").textContent="00:00";
+$("boxRepos").classList.remove("fin");
+render();histo();graphique();
 };
 
-const $ = id => document.getElementById(id);
-const fmt = s => String(Math.floor(s/60)).padStart(2,'0') + ':' + String(Math.floor(s%60)).padStart(2,'0');
-let mem = {};
-const load = k => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : (mem[k] || null); } catch (e) { return mem[k] || null; } };
-const save = (k, v) => { mem[k] = v; try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
-
-// Brouillon de séance en cours (sauvegardé en continu)
-let draft = load('encours') || { start: null, sel: null, data: {} };
-let reposEnd = null, reposDefault = 90, audioCtx = null, reposAlerte = false;
-const sauver = () => save('encours', draft);
-
-Object.keys(PROGRAMME).forEach(n => { const o = document.createElement('option'); o.textContent = n; $('seance').appendChild(o); });
-if (draft.sel && PROGRAMME[draft.sel]) $('seance').value = draft.sel;
-$('seance').onchange = () => { collecter(); draft.sel = $('seance').value; sauver(); render(); };
-
-const tousExos = [...new Set(Object.values(PROGRAMME).flat().map(e => e[0]))];
-tousExos.forEach(n => { const o = document.createElement('option'); o.textContent = n; $('progExo').appendChild(o); });
-$('progExo').onchange = graphique;
-
-function derniere(nom) {
-  const h = load('historique') || [];
-  for (let i = h.length - 1; i >= 0; i--) {
-    const e = h[i].exos.find(x => x.nom === nom);
-    if (e) {
-      const s = e.sets.filter(x => x.kg || x.reps);
-      if (s.length) return s;
-    }
-  }
-  return null;
+function histo(){
+let h=load("historique")||[],last=h.slice(-10).reverse();
+$("hist").innerHTML=last.length?"<h3>Historique</h3>":"";
+last.forEach(s=>{
+let d=document.createElement("div");d.className="item";
+d.innerHTML=`<div><b>${s.date}</b> – ${s.seance}<br>Durée : ${s.duree}</div><button>🗑</button>`;
+d.querySelector("button").onclick=()=>{
+if(!confirm("Supprimer cette séance ?"))return;
+save("historique",(load("historique")||[]).filter(x=>x.ts!==s.ts));
+render();histo();graphique();
+};
+$("hist").appendChild(d);
+});
 }
 
-// Lit l'écran et le range dans le brouillon
-function collecter() {
-  const nom = $('seance').value;
-  const d = {};
-  document.querySelectorAll('.set').forEach(r => {
-    const [kg, reps] = r.querySelectorAll('input');
-    (d[r.dataset.exo] = d[r.dataset.exo] || []).push([kg.value, reps.value, r.classList.contains('done')]);
-  });
-  if (Object.keys(d).length) draft.data[nom] = d;
-}
-const maj = () => { collecter(); sauver(); };
-
-function render() {
-  const nom = $('seance').value;
-  draft.sel = nom;
-  const liste = $('liste');
-  liste.innerHTML = '';
-  const saved = draft.data[nom] || {};
-  PROGRAMME[nom].forEach(([exo, series, reps, repos]) => {
-    const d = document.createElement('div');
-    d.className = 'exo';
-    const prev = derniere(exo);
-    const txt = prev ? prev.map(s => (s.kg ? s.kg + 'kg×' : '') + (s.reps || '?')).join(' · ') : '';
-    d.innerHTML = `<h3>${exo}</h3><p>${series} séries · ${reps} reps · repos ${repos}s</p>` + (prev ? `<div class="prev">Dernière fois : ${txt}</div>` : '');
-    for (let s = 0; s < series; s++) {
-      const r = document.createElement('div');
-      r.className = 'set';
-      r.dataset.exo = exo;
-      const p = prev && (prev[s] || prev[prev.length - 1]);
-      r.innerHTML = `<span>${s+1}</span><input type="number" inputmode="decimal" placeholder="${p && p.kg ? p.kg : 'kg'}"><input type="number" inputmode="numeric" placeholder="${p && p.reps ? p.reps : 'reps'}"><button>✓</button>`;
-      const [kg, rp] = r.querySelectorAll('input');
-      const v = saved[exo] && saved[exo][s];
-      if (v) { kg.value = v[0]; rp.value = v[1]; if (v[2]) r.classList.add('done'); }
-      kg.oninput = rp.oninput = maj;
-      r.querySelector('button').onclick = () => {
-        r.classList.toggle('done');
-        if (r.classList.contains('done')) { if (!draft.start) demarrer(); lancerRepos(repos); }
-        maj();
-      };
-      d.appendChild(r);
-    }
-    liste.appendChild(d);
-  });
-  sauver();
-}
-
-function majBouton() { $('btnStart').textContent = draft.start ? '● En cours' : '▶ Démarrer'; }
-function demarrer() { if (draft.start) return; draft.start = Date.now(); sauver(); majBouton(); }
-
-function lancerRepos(sec) {
-  reposDefault = sec || reposDefault;
-  reposEnd = Date.now() + reposDefault * 1000;
-  reposAlerte = reposDefault <= 10;
-  try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); } catch (e) {}
-  $('boxRepos').classList.remove('fin');
-}
-
-function bip(seq) {
-  try {
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    seq.forEach(([t, dur]) => {
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-      o.frequency.value = 880; o.connect(g); g.connect(audioCtx.destination);
-      g.gain.setValueAtTime(0.25, now + t);
-      g.gain.setValueAtTime(0.25, now + t + dur - 0.03);
-      g.gain.linearRampToValueAtTime(0.001, now + t + dur);
-      o.start(now + t); o.stop(now + t + dur);
-    });
-  } catch (e) {}
-}
-
-function update() {
-  if (draft.start) $('tSeance').textContent = fmt((Date.now() - draft.start) / 1000);
-  if (reposEnd) {
-    const left = Math.ceil((reposEnd - Date.now()) / 1000);
-    if (left <= 0) {
-      $('tRepos').textContent = '00:00';
-      $('boxRepos').classList.add('fin');
-      reposEnd = null;
-      bip([[0, 1.0]]);
-      if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
-    } else {
-      $('tRepos').textContent = fmt(left);
-      if (!reposAlerte && left <= 10) { reposAlerte = true; bip([[0, 0.15], [0.3, 0.15]]); }
-    }
-  }
-}
-setInterval(update, 500);
-
-$('btnStart').onclick = demarrer;
-$('btnRepos').onclick = () => lancerRepos(reposDefault);
-
-$('btnFin').onclick = () => {
-  collecter();
-  const nom = $('seance').value;
-  const d = draft.data[nom] || {};
-  const exos = Object.keys(d).map(n => ({
-    nom: n,
-    sets: d[n].filter(s => s[0] || s[1]).map(s => ({ kg: s[0], reps: s[1], fait: s[2] }))
-  })).filter(e => e.sets.length);
-  if (!exos.length) return alert('Aucune série saisie.');
-  if (!confirm('Terminer et enregistrer la séance ?')) return;
-  const h = load('historique') || [];
-  h.push({ ts: Date.now(), date: new Date().toLocaleDateString('fr-FR'), seance: nom, duree: fmt(draft.start ? (Date.now() - draft.start) / 1000 : 0), exos });
-  save('historique', h);
-  delete draft.data[nom];
-  draft.start = null; reposEnd = null;
-  sauver(); majBouton();
-  $('tSeance').textContent = '00:00'; $('tRepos').textContent = '00:00';
-  render(); histo(); graphique();
+$("btnExport").onclick=async()=>{
+let txt=JSON.stringify(load("historique")||[]);
+try{await navigator.clipboard.writeText(txt);alert("Export copié.")}
+catch(e){$("zone").style.display="block";$("zone").value=txt;$("zone").select()}
+};
+$("btnImport").onclick=()=>{
+let z=$("zone");
+if(z.style.display==="none"){z.style.display="block";z.value="";z.focus();return}
+try{
+let arr=JSON.parse(z.value);if(!Array.isArray(arr))throw 0;
+if(!confirm("Remplacer l'historique par ces "+arr.length+" séances ?"))return;
+save("historique",arr);z.style.display="none";z.value="";render();histo();graphique();
+}catch(e){alert("Données invalides.")}
 };
 
-function histo() {
-  const h = load('historique') || [];
-  const last = h.slice(-10).reverse();
-  $('hist').innerHTML = last.length ? '<h3>Historique</h3>' : '';
-  last.forEach(s => {
-    const d = document.createElement('div');
-    d.className = 'item';
-    d.innerHTML = `<div><b>${s.date}</b> – ${s.seance}<br>Durée : ${s.duree}</div><button>🗑</button>`;
-    d.querySelector('button').onclick = () => {
-      if (!confirm('Supprimer cette séance de l’historique ?')) return;
-      save('historique', (load('historique') || []).filter(x => x.ts !== s.ts));
-      render(); histo(); graphique();
-    };
-    $('hist').appendChild(d);
-  });
+function donneesExo(nom){
+let pts=[];
+(load("historique")||[]).forEach(s=>{
+let e=s.exos.find(x=>x.nom===nom);if(!e)return;
+let ok=e.sets.filter(x=>parseFloat(x.reps)>0);if(!ok.length)return;
+let lest=ok.filter(x=>parseFloat(x.kg)>0),corps=!lest.length,base=corps?ok:lest;
+let max=Math.max(...base.map(x=>corps?parseFloat(x.reps):parseFloat(x.kg)));
+let vol=base.reduce((t,x)=>t+(corps?1:parseFloat(x.kg))*parseFloat(x.reps),0);
+pts.push({date:s.date.slice(0,5),max,vol,corps});
+});
+return pts;
+}
+function ligne(pts,cle,couleur,W,H,pad){
+let vals=pts.map(p=>p[cle]),min=Math.min(...vals),max=Math.max(...vals),span=max-min||1;
+let x=i=>pad.l+(pts.length===1?(W-pad.l-pad.r)/2:i*(W-pad.l-pad.r)/(pts.length-1));
+let y=v=>pad.t+(H-pad.t-pad.b)*(1-(v-min)/span);
+let d=pts.map((p,i)=>(i?"L":"M")+x(i).toFixed(1)+" "+y(p[cle]).toFixed(1)).join(" ");
+let svg=`<path d="${d}" fill="none" stroke="${couleur}" stroke-width="2.5"/>`;
+pts.forEach((p,i)=>svg+=`<circle cx="${x(i)}" cy="${y(p[cle])}" r="4" fill="${couleur}"/>`);
+return{svg,min,max,x};
+}
+function graphique(){
+let nom=$("progExo").value,pts=donneesExo(nom);
+if(pts.length){let mode=pts[pts.length-1].corps;pts=pts.filter(p=>p.corps===mode)}
+pts=pts.slice(-12);
+if(!pts.length){$("graph").innerHTML='<div class="vide">Pas encore de données pour cet exercice.<br>Termine une séance avec des répétitions saisies.</div>';return}
+let corps=pts[0].corps;
+$("l1").textContent=corps?"Reps max":"Poids max (kg)";
+$("l2").textContent=corps?"Total reps":"Volume (kg × reps)";
+let W=340,H=200,pad={l:38,r:38,t:14,b:26};
+let a=ligne(pts,"max","#3b82f6",W,H,pad),b=ligne(pts,"vol","#f59e0b",W,H,pad);
+let svg=`<svg viewBox="0 0 ${W} ${H}">`;
+for(let k=0;k<=3;k++){let yy=pad.t+(H-pad.t-pad.b)*k/3;svg+=`<line x1="${pad.l}" x2="${W-pad.r}" y1="${yy}" y2="${yy}" stroke="#374151"/>`}
+svg+=a.svg+b.svg;
+svg+=`<text x="${pad.l-6}" y="${pad.t+4}" fill="#3b82f6" font-size="11" text-anchor="end">${a.max}</text>`;
+svg+=`<text x="${pad.l-6}" y="${H-pad.b}" fill="#3b82f6" font-size="11" text-anchor="end">${a.min}</text>`;
+svg+=`<text x="${W-pad.r+6}" y="${pad.t+4}" fill="#f59e0b" font-size="11">${Math.round(b.max)}</text>`;
+svg+=`<text x="${W-pad.r+6}" y="${H-pad.b}" fill="#f59e0b" font-size="11">${Math.round(b.min)}</text>`;
+let pas=Math.ceil(pts.length/6);
+pts.forEach((p,i)=>{if(i%pas===0||i===pts.length-1)svg+=`<text x="${a.x(i)}" y="${H-8}" fill="#9ca3af" font-size="10" text-anchor="middle">${p.date}</text>`});
+svg+="</svg>";
+let resume="";
+if(pts.length>1){
+let diff=pts[pts.length-1].max-pts[0].max;
+resume=`<div class="prev">Progression : ${pts[0].max} → ${pts[pts.length-1].max} (${diff>=0?"+":""}${diff}) sur ${pts.length} séances</div>`;
+}
+$("graph").innerHTML=svg+resume;
 }
 
-// Export / import
-$('btnExport').onclick = async () => {
-  const txt = JSON.stringify(load('historique') || []);
-  try { await navigator.clipboard.writeText(txt); alert('Export copié dans le presse-papiers.'); }
-  catch (e) { $('zone').style.display = 'block'; $('zone').value = txt; $('zone').select(); }
-};
-$('btnImport').onclick = () => {
-  const z = $('zone');
-  if (z.style.display === 'none') { z.style.display = 'block'; z.value = ''; z.focus(); return; }
-  try {
-    const arr = JSON.parse(z.value);
-    if (!Array.isArray(arr)) throw 0;
-    if (!confirm('Remplacer l’historique actuel par ces ' + arr.length + ' séances ?')) return;
-    save('historique', arr);
-    z.style.display = 'none'; z.value = '';
-    render(); histo(); graphique();
-  } catch (e) { alert('Données invalides.'); }
-};
-
-// ---------- Graphique de progression ----------
-// Si des charges sont saisies : poids max + volume (kg×reps). Sinon (poids du corps) : reps max + total reps.
-function donneesExo(nom) {
-  const pts = [];
-  (load('historique') || []).forEach(s => {
-    const e = s.exos.find(x => x.nom === nom);
-    if (!e) return;
-    const ok = e.sets.filter(x => parseFloat(x.reps) > 0);
-    if (!ok.length) return;
-    const lest = ok.filter(x => parseFloat(x.kg) > 0);
-    const corps = !lest.length;
-    const base = corps ? ok : lest;
-    const max = Math.max(...base.map(x => corps ? parseFloat(x.reps) : parseFloat(x.kg)));
-    const vol = base.reduce((t, x) => t + (corps ? 1 : parseFloat(x.kg)) * parseFloat(x.reps), 0);
-    pts.push({ date: s.date.slice(0, 5), max, vol, corps });
-  });
-  return pts;
-}
-
-function ligne(pts, cle, couleur, W, H, pad) {
-  const vals = pts.map(p => p[cle]);
-  const min = Math.min(...vals), max = Math.max(...vals);
-  const span = (max - min) || 1;
-  const x = i => pad.l + (pts.length === 1 ? (W - pad.l - pad.r) / 2 : i * (W - pad.l - pad.r) / (pts.length - 1));
-  const y = v => pad.t + (H - pad.t - pad.b) * (1 - (v - min) / span);
-  const d = pts.map((p, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p[cle]).toFixed(1)).join(' ');
-  let s = `<path d="${d}" fill="none" stroke="${couleur}" stroke-width="2.5" stroke-linejoin="round"/>`;
-  pts.forEach((p, i) => { s += `<circle cx="${x(i).toFixed(1)}" cy="${y(p[cle]).toFixed(1)}" r="4" fill="${couleur}"/>`; });
-  return { svg: s, min, max, x };
-}
-
-function graphique() {
-  const nom = $('progExo').value;
-  let pts = donneesExo(nom);
-  if (pts.length) { const mode = pts[pts.length - 1].corps; pts = pts.filter(p => p.corps === mode); }
-  pts = pts.slice(-12);
-  if (!pts.length) { $('graph').innerHTML = '<div class="vide">Pas encore de données pour cet exercice.<br>Termine une séance avec des reps saisies pour voir la courbe.</div>'; return; }
-  const corps = pts[0].corps;
-  $('l1').textContent = corps ? 'Reps max' : 'Poids max (kg)';
-  $('l2').textContent = corps ? 'Total reps' : 'Volume (kg × reps)';
-  const W = 340, H = 200, pad = { l: 38, r: 38, t: 14, b: 26 };
-  const a = ligne(pts, 'max', '#3b82f6', W, H, pad);
-  const b = ligne(pts, 'vol', '#f59e0b', W, H, pad);
-  let svg = `<svg viewBox="0 0 ${W} ${H}">`;
-  for (let k = 0; k <= 3; k++) {
-    const yy = pad.t + (H - pad.t - pad.b) * k / 3;
-    svg += `<line x1="${pad.l}" x2="${W - pad.r}" y1="${yy}" y2="${yy}" stroke="#374151" stroke-width="1"/>`;
-  }
-  svg += a.svg + b.svg;
-  svg += `<text x="${pad.l - 6}" y="${pad.t + 4}" fill="#3b82f6" font-size="11" text-anchor="end">${a.max}</text>`;
-  svg += `<text x="${pad.l - 6}" y="${H - pad.b}" fill="#3b82f6" font-size="11" text-anchor="end">${a.min}</text>`;
-  svg += `<text x="${W - pad.r + 6}" y="${pad.t + 4}" fill="#f59e0b" font-size="11">${Math.round(b.max)}</text>`;
-  svg += `<text x="${W - pad.r + 6}" y="${H - pad.b}" fill="#f59e0b" font-size="11">${Math.round(b.min)}</text>`;
-  const pas = Math.ceil(pts.length / 6);
-  pts.forEach((p, i) => { if (i % pas === 0 || i === pts.length - 1) svg += `<text x="${a.x(i).toFixed(1)}" y="${H - 8}" fill="#9ca3af" font-size="10" text-anchor="middle">${p.date}</text>`; });
-  svg += '</svg>';
-  let resume = '';
-  if (pts.length > 1) {
-    const diff = pts[pts.length - 1].max - pts[0].max;
-    resume = `<div class="prev" style="margin-top:8px">${corps ? 'Reps max' : 'Poids max'} : ${pts[0].max} → ${pts[pts.length - 1].max} ${corps ? '' : 'kg '}(${diff >= 0 ? '+' : ''}${diff}) sur ${pts.length} séances</div>`;
-  }
-  $('graph').innerHTML = svg + resume;
-}
-
-majBouton(); update(); render(); histo(); graphique();
+majBouton();
+update();
+render();
+histo();
+graphique();
 </script>
 </body>
 </html>
